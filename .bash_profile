@@ -6,7 +6,9 @@ export LSCOLORS=GxFxCxDxBxegedabagacGx
 parse_git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
-
+parse_git_branch_simple(){
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \1/'
+}
 alias terminal='source ~/.bash_profile'
 alias finder='open `pwd`'
 
@@ -23,7 +25,14 @@ alias new="git checkout -b $1"
 alias gc='git checkout'
 alias mod="git submodule update --init --recursive"
 alias clean='git branch | egrep -ve "(master|development|\*)" | xargs git branch -D; git remote prune origin'
+alias quick='git add -A;git commit -am "sq";git push origin $(parse_git_branch_simple)'
+#alias reset="git reset --mixed $1;git add -A;git commit -a --amend --no-edit"
 
+smash(){
+  git reset --mixed "${1:?'Missing commit hash'}"
+  git add -A;
+  git commit -a --amend --no-edit
+}
 
 #Hierarchy Viewer Variable
 export ANDROID_HVPROTO=ddm
